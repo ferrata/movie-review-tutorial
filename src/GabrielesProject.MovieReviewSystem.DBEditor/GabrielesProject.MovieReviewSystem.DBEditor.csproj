@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>87e305f5-571e-4b27-bc55-f46393ffee24</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup-postgresql" Version="5.0.40" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="ScriptsSQL\CreateTables\001ClearTables.sql" />
+		<EmbeddedResource Include="ScriptsSQL\CreateTables\002CreateMoviesTables.sql" />
+		<EmbeddedResource Include="ScriptsSQL\CreateTables\003CreateRatingsTables.sql" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GabrielesProject.MovieReviewSystem.WebApi\GabrielesProject.MovieReviewSystem.WebApi.csproj" />
+  </ItemGroup>
+
+</Project>

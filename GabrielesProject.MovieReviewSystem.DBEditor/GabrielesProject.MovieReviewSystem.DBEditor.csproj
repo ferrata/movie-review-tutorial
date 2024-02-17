@@ -14,4 +14,8 @@
     <ProjectReference Include="..\src\GabrielesProject.MovieReviewSystem.WebApi\GabrielesProject.MovieReviewSystem.WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>

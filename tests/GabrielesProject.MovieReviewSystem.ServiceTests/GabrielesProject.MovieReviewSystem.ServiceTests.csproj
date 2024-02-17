@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\GabrielesProject.MovieReviewSystem.Application\GabrielesProject.MovieReviewSystem.Application.csproj" />
+    <ProjectReference Include="..\..\src\GabrielesProject.MovieReviewSystem.Application\GabrielesProject.MovieReviewSystem.Application.csproj" />
   </ItemGroup>
 
 </Project>
