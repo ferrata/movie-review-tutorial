@@ -1,9 +1,9 @@
 using System.Runtime.CompilerServices;
 using FluentAssertions;
+using FluentValidation;
 using GabrielesProject.MovieReviewSystem.Application.DTOs;
 using GabrielesProject.MovieReviewSystem.Application.Interfaces;
 using GabrielesProject.MovieReviewSystem.Application.Services;
-using GabrielesProject.MovieReviewSystem.WebApi.Controllers;
 using Moq;
 
 using Model = GabrielesProject.MovieReviewSystem.Domain.Entities;
@@ -15,6 +15,7 @@ public class MovieServiceTests
     private readonly Mock<ICommentsService> _commentsService;
     private readonly Mock<IMovieRatingRepository> _movieRatingRepository;
     private readonly Mock<IMovieRepository> _movieRepository;
+    private readonly Mock<IRatingValidator> _ratingValidator;
 
     private readonly MovieService _movieService;
 
@@ -23,8 +24,14 @@ public class MovieServiceTests
         _movieRepository = new Mock<IMovieRepository>();
         _movieRatingRepository = new Mock<IMovieRatingRepository>();
         _commentsService = new Mock<ICommentsService>();
-        
-        _movieService = new MovieService(_movieRepository.Object, _movieRatingRepository.Object, _commentsService.Object);
+        _ratingValidator = new Mock<IRatingValidator>();
+
+        _movieService = new MovieService(
+            _movieRepository.Object,
+            _movieRatingRepository.Object,
+            _commentsService.Object,
+            _ratingValidator.Object
+        );
     }
 
     [Fact]
@@ -134,5 +141,32 @@ public class MovieServiceTests
         movies.Should().NotBeNullOrEmpty();
         movies.Should().HaveCount(1);
         movies.Should().Contain(m => m.Id == 2 && m.Title == "Movie 2" && m.Summary == "Summary 2");
+    }
+    
+    [Fact]
+    public async Task WhenGetMoviesAsync_WithInvalidArgs_ThenThrowException()
+    {
+        // Arrange
+        _ratingValidator
+            .Setup(x => x.ValidateAndThrow(It.IsAny<int>()))
+            .Throws(new ValidationException("Invalid rating"));
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _movieService.GetMoviesAsync(-1, 7));
+    }
+
+    [Fact]
+    public async Task WhenRateMovieAsync_WithInvalidRating_ThenThrowException()
+    {
+        // Arrange
+        _ratingValidator
+            .Setup(x => x.ValidateAndThrow(It.IsAny<int>()))
+            .Throws(new ValidationException("Invalid rating"));
+        
+        var movieId = 1;
+        var rating = 6;
+        
+        // Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _movieService.RateMovieAsync(movieId, rating));
     }
 }

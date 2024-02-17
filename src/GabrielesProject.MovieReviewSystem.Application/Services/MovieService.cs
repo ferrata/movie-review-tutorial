@@ -1,11 +1,9 @@
-using System.Data;
+using FluentValidation;
 using GabrielesProject.MovieReviewSystem.Application.DTOs;
 using GabrielesProject.MovieReviewSystem.Application.Interfaces;
-using GabrielesProject.MovieReviewSystem.Application.Services;
-
 using Model = GabrielesProject.MovieReviewSystem.Domain.Entities;
 
-namespace GabrielesProject.MovieReviewSystem.WebApi.Controllers;
+namespace GabrielesProject.MovieReviewSystem.Application.Services;
 
 public interface IMovieService
 {
@@ -22,12 +20,18 @@ public class MovieService : IMovieService
     private readonly IMovieRepository _movieRepository;
     private readonly IMovieRatingRepository _movieRatingRepository;
     private readonly ICommentsService _commentsService;
+    private readonly IRatingValidator _ratingValidator;
 
-    public MovieService(IMovieRepository movieRepository, IMovieRatingRepository movieRatingRepository, ICommentsService commentsService)
+    public MovieService(
+        IMovieRepository movieRepository,
+        IMovieRatingRepository movieRatingRepository,
+        ICommentsService commentsService,
+        IRatingValidator ratingValidator)
     {
         _movieRepository = movieRepository;
         _movieRatingRepository = movieRatingRepository;
         _commentsService = commentsService;
+        _ratingValidator = ratingValidator;
     }
 
     public async Task<Movie> AddMovieAsync(CreateMovieArgs movie)
@@ -49,6 +53,12 @@ public class MovieService : IMovieService
 
     public async Task<IEnumerable<Movie>> GetMoviesAsync(int? minRating, int? maxRating)
     {
+        if (minRating is not null && maxRating is not null)
+        { 
+            _ratingValidator.ValidateAndThrow(minRating.Value);
+            _ratingValidator.ValidateAndThrow(maxRating.Value);
+        }
+
         var moviesFromDb = await _movieRepository.GetMoviesAsync(minRating ?? 0, maxRating ?? 5);
         var movies = await ConvertToDto(moviesFromDb);
         return movies.Where(m => m.Rating >= minRating && m.Rating <= maxRating);
@@ -69,13 +79,14 @@ public class MovieService : IMovieService
 
     public Task RateMovieAsync(int id, int rating)
     {
+        _ratingValidator.ValidateAndThrow(rating);
         return _movieRatingRepository.AddRatingAsync(id, rating);
     }
 
     private async Task<decimal?> GetAverageRatings(int movieId)
     {
-        var ratings = await _movieRatingRepository.GetRatingsAsync(movieId);
-        if (ratings.Any())
+        var ratings = (await _movieRatingRepository.GetRatingsAsync(movieId)).ToList();
+        if (ratings.Count > 0)
         {
             return (decimal)ratings.Average();
         }
