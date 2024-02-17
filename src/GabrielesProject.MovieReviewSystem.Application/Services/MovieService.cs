@@ -1,6 +1,7 @@
 using FluentValidation;
 using GabrielesProject.MovieReviewSystem.Application.DTOs;
 using GabrielesProject.MovieReviewSystem.Application.Interfaces;
+using GabrielesProject.MovieReviewSystem.Domain.Exceptions;
 using Model = GabrielesProject.MovieReviewSystem.Domain.Entities;
 
 namespace GabrielesProject.MovieReviewSystem.Application.Services;
@@ -69,7 +70,7 @@ public class MovieService : IMovieService
         var movieFromDb = await _movieRepository.GetMovieAsync(id);
         if (movieFromDb is null)
         {
-            throw new KeyNotFoundException();
+            throw new MovieNotFoundException();
         }
 
         Movie movie = await ConvertToDto(movieFromDb);
