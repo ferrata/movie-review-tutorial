@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <RootNamespace>GabrielesProject.MovieReviewSystem.ServiceTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
