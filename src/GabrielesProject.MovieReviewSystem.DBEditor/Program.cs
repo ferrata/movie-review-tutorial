@@ -25,7 +25,7 @@ internal class Program
             Console.ResetColor();
             return false;
         }
-       ;
+
         return true;
     }
 
@@ -34,7 +34,7 @@ internal class Program
         Console.Clear();
 
         //get app settings from API app
-        string dirs = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\GabrielesProject.MovieReviewSystem.WebApi"));
+        string dirs = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\GabrielesProject.MovieReviewSystem.WebApi"));
         var builder = new ConfigurationBuilder()
                 .SetBasePath(dirs)
                 .AddJsonFile("appsettings.json", optional: false)
