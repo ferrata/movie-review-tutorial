@@ -4,6 +4,7 @@ using FluentValidation;
 using GabrielesProject.MovieReviewSystem.Application.DTOs;
 using GabrielesProject.MovieReviewSystem.Application.Interfaces;
 using GabrielesProject.MovieReviewSystem.Application.Services;
+using GabrielesProject.MovieReviewSystem.Domain.Exceptions;
 using Moq;
 
 using Model = GabrielesProject.MovieReviewSystem.Domain.Entities;
@@ -53,14 +54,14 @@ public class MovieServiceTests
     }
 
     [Fact]
-    public async Task WhenGetMovieAsync_WithInvalidId_ThenReturnNull()
+    public async Task WhenGetMovieAsync_WithInvalidId_ThenThrowsException()
     {
         // Arrange
         var movieId = 1;
         _movieRepository.Setup(x => x.GetMovieAsync(movieId)).ReturnsAsync((Model.Movie)null);
         
         // Act & Assert
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => _movieService.GetMovieAsync(movieId));
+        await Assert.ThrowsAsync<MovieNotFoundException>(() => _movieService.GetMovieAsync(movieId));
     }
 
     [Fact]
@@ -84,14 +85,14 @@ public class MovieServiceTests
     }
 
     [Fact]
-    public async Task WhenAddMovieAsync_WithInvalidArgs_ThenReturnNull()
+    public async Task WhenAddMovieAsync_WithInvalidArgs_ThenThrowsException()
     {
         // Arrange
         var movieArgs = new CreateMovieArgs { Title = "Movie 1", Summary = "Summary 1" };
         _movieRepository.Setup(x => x.AddMovieAsync(It.IsAny<Model.Movie>())).ReturnsAsync(0);
         
         // Act & Assert
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => _movieService.AddMovieAsync(movieArgs));
+        await Assert.ThrowsAsync<MovieNotFoundException>(() => _movieService.AddMovieAsync(movieArgs));
     }
 
     [Fact]
@@ -144,29 +145,29 @@ public class MovieServiceTests
     }
     
     [Fact]
-    public async Task WhenGetMoviesAsync_WithInvalidArgs_ThenThrowException()
+    public async Task WhenGetMoviesAsync_WithInvalidArgs_ThenThrowsException()
     {
         // Arrange
         _ratingValidator
             .Setup(x => x.ValidateAndThrow(It.IsAny<int>()))
-            .Throws(new ValidationException("Invalid rating"));
+            .Throws(new InvalidInputException("Invalid rating"));
 
         // Act & Assert
-        await Assert.ThrowsAsync<ValidationException>(() => _movieService.GetMoviesAsync(-1, 7));
+        await Assert.ThrowsAsync<InvalidInputException>(() => _movieService.GetMoviesAsync(-1, 7));
     }
 
     [Fact]
-    public async Task WhenRateMovieAsync_WithInvalidRating_ThenThrowException()
+    public async Task WhenRateMovieAsync_WithInvalidRating_ThenThrowsException()
     {
         // Arrange
         _ratingValidator
             .Setup(x => x.ValidateAndThrow(It.IsAny<int>()))
-            .Throws(new ValidationException("Invalid rating"));
+            .Throws(new InvalidInputException("Invalid rating"));
         
         var movieId = 1;
         var rating = 6;
         
         // Act & Assert
-        await Assert.ThrowsAsync<ValidationException>(() => _movieService.RateMovieAsync(movieId, rating));
+        await Assert.ThrowsAsync<InvalidInputException>(() => _movieService.RateMovieAsync(movieId, rating));
     }
 }

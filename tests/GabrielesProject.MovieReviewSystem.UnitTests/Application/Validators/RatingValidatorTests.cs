@@ -1,6 +1,7 @@
 using FluentAssertions;
 using FluentValidation;
 using GabrielesProject.MovieReviewSystem.Application.Validators;
+using GabrielesProject.MovieReviewSystem.Domain.Exceptions;
 
 namespace GabrielesProject.MovieReviewSystem.ServiceTests.Application.Validators;
 
@@ -38,7 +39,7 @@ public class RatingValidatorTests
         // Act & Assert
         ratingValidator
             .Invoking(x => x.ValidateAndThrow(rating))
-            .Should().Throw<ValidationException>()
+            .Should().Throw<InvalidInputException>()
             .WithMessage("*Invalid rating value, must be between 1 and 5*");
     }
 }
