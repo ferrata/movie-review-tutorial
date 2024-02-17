@@ -21,4 +21,8 @@
     <Folder Include="Middlewares\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="GabrielesProject.MovieReviewSystem.IntegrationTests" />
+  </ItemGroup>
+
 </Project>
