@@ -1,4 +1,5 @@
 using GabrielesProject.MovieReviewSystem.Application.DTOs;
+using GabrielesProject.MovieReviewSystem.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GabrielesProject.MovieReviewSystem.WebApi.Controllers;

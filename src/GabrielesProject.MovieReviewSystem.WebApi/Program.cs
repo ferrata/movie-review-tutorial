@@ -1,10 +1,10 @@
 using Npgsql;
 using System.Data;
 using GabrielesProject.MovieReviewSystem.Infrastracture;
-using GabrielesProject.MovieReviewSystem.WebApi.Controllers;
 using GabrielesProject.MovieReviewSystem.Application.Interfaces;
 using GabrielesProject.MovieReviewSystem.Infrastracture.Repositories;
 using GabrielesProject.MovieReviewSystem.Application.Services;
+using GabrielesProject.MovieReviewSystem.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 string? dbConnectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=movies";
@@ -27,6 +27,7 @@ builder.Services.AddTransient<IMovieRepository, MovieRepository>();
 builder.Services.AddTransient<IMovieRatingRepository, MovieRatingRepository>();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<ICommentsService, CommentsService>();
+builder.Services.AddTransient<IRatingValidator, RatingValidator>();
 
 builder.Services.AddHttpClient();
 
