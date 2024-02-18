@@ -5,6 +5,7 @@ using GabrielesProject.MovieReviewSystem.Application.Interfaces;
 using GabrielesProject.MovieReviewSystem.Infrastracture.Repositories;
 using GabrielesProject.MovieReviewSystem.Application.Services;
 using GabrielesProject.MovieReviewSystem.Application.Validators;
+using GabrielesProject.MovieReviewSystem.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 string? dbConnectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=movies";
@@ -39,6 +40,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
