@@ -8,10 +8,9 @@ using GabrielesProject.MovieReviewSystem.Application.Validators;
 using GabrielesProject.MovieReviewSystem.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
-string? dbConnectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=movies";
+var dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Add services to the container.
-
 
 // lower case controller names
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
